@@ -1,0 +1,19 @@
+{
+  "name": "shopxpress",
+  "version": "1.0.0",
+  "description": "An ecommerce store restful API written in expressJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/namanattri/shopXpress.git"
+  },
+  "author": "Naman Attri <namanattri5@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/namanattri/shopXpress/issues"
+  },
+  "homepage": "https://github.com/namanattri/shopXpress#readme"
+}
