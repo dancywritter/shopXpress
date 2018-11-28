@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/namanattri/shopXpress/issues"
   },
-  "homepage": "https://github.com/namanattri/shopXpress#readme"
+  "homepage": "https://github.com/namanattri/shopXpress#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
 }
