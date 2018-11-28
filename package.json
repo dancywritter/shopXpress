@@ -1,0 +1,30 @@
+{
+  "name": "shopxpress",
+  "version": "1.0.0",
+  "description": "An ecommerce store restful API written in expressJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest tests/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/namanattri/shopXpress.git"
+  },
+  "author": "Naman Attri <namanattri5@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/namanattri/shopXpress/issues"
+  },
+  "homepage": "https://github.com/namanattri/shopXpress#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "jest": "^23.6.0",
+    "nodemon": "^1.18.7",
+    "superagent": "^4.0.0",
+    "supertest": "^3.3.0"
+  }
+}
