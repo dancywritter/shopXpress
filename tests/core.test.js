@@ -25,16 +25,39 @@ describe("Test the root path.", () => {
     expect(body.message).toBe("shopXpress an expressJS based RESTful ecommerce engine.")
   })
 
-  test("any method other than GET should return Method not allowed message and should exit cleanly.", async () => {
+  test("POST / should return 405 method not allowed json response.", async () => {
     const response = await request(app).post("/")
     expect(response.statusCode).toBe(405)
     expect(response.type).toMatch(/json/)
     expect(typeof response.body).toBe("object")
     expect(response.body.status).toBe(false)
     expect(response.body.message).toBe("Method POST not allowed on /")
+  })
 
-    /*const response = await request(app).put("/");
-    const response = await request(app).delete("/");
-    const response = await request(app).patch("/");*/
+  test("PUT / should return 405 method not allowed json response.", async () => {
+    const response = await request(app).put("/")
+    expect(response.statusCode).toBe(405)
+    expect(response.type).toMatch(/json/)
+    expect(typeof response.body).toBe("object")
+    expect(response.body.status).toBe(false)
+    expect(response.body.message).toBe("Method PUT not allowed on /")
+  })
+
+  test("PATCH / should return 405 method not allowed json response.", async () => {
+    const response = await request(app).patch("/")
+    expect(response.statusCode).toBe(405)
+    expect(response.type).toMatch(/json/)
+    expect(typeof response.body).toBe("object")
+    expect(response.body.status).toBe(false)
+    expect(response.body.message).toBe("Method PATCH not allowed on /")
+  })
+  
+  test("DELETE / should return 405 method not allowed json response.", async () => {
+    const response = await request(app).delete("/")
+    expect(response.statusCode).toBe(405)
+    expect(response.type).toMatch(/json/)
+    expect(typeof response.body).toBe("object")
+    expect(response.body.status).toBe(false)
+    expect(response.body.message).toBe("Method DELETE not allowed on /")
   })
 })
