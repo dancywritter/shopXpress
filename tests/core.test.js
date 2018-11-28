@@ -109,3 +109,52 @@ describe("test the /hello path", () => {
     expect(response.body.message).toBe("Hello World!");
   })
 })
+
+describe("testing undefined route for neat 404", () => {
+  test("it should return a neat json response with 404 status code and message showing the path as invalid.", async () => {
+    const response = await request(app).get('/undefinedRoute')
+    expect(response.statusCode).toBe(404)
+    expect(response.type).toMatch(/json/)
+    expect(typeof response.body).toBe("object")
+    expect(response.body.status).toBe(false)
+    expect(response.body.message).toBe("Route /undefinedRoute not found")
+  })
+
+  
+  test("it should return a neat 404 json api response for all request methods: GET, POST, PUT, PATCH & DELETE.", async () => {
+    var response = await request(app).get('/undefinedRoute')
+    expect(response.statusCode).toBe(404)
+    expect(response.type).toMatch(/json/)
+    expect(typeof response.body).toBe("object")
+    expect(response.body.status).toBe(false)
+    expect(response.body.message).toBe("Route /undefinedRoute not found")
+    
+    response = await request(app).post('/undefinedRoute')
+    expect(response.statusCode).toBe(404)
+    expect(response.type).toMatch(/json/)
+    expect(typeof response.body).toBe("object")
+    expect(response.body.status).toBe(false)
+    expect(response.body.message).toBe("Route /undefinedRoute not found")
+    
+    response = await request(app).put('/undefinedRoute')
+    expect(response.statusCode).toBe(404)
+    expect(response.type).toMatch(/json/)
+    expect(typeof response.body).toBe("object")
+    expect(response.body.status).toBe(false)
+    expect(response.body.message).toBe("Route /undefinedRoute not found")
+    
+    response = await request(app).patch('/undefinedRoute')
+    expect(response.statusCode).toBe(404)
+    expect(response.type).toMatch(/json/)
+    expect(typeof response.body).toBe("object")
+    expect(response.body.status).toBe(false)
+    expect(response.body.message).toBe("Route /undefinedRoute not found")
+    
+    response = await request(app).delete('/undefinedRoute')
+    expect(response.statusCode).toBe(404)
+    expect(response.type).toMatch(/json/)
+    expect(typeof response.body).toBe("object")
+    expect(response.body.status).toBe(false)
+    expect(response.body.message).toBe("Route /undefinedRoute not found")
+  })
+})
