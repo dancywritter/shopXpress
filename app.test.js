@@ -9,6 +9,6 @@ app.all('/', (req, res) => {
     res.status(405).json({status: false, message: "Method "+req.method.toUpperCase()+" not allowed on /"})
   }
 });
-app.get('/hello', (req, res) => res.json({status:true, message: "Hello World!"}));
+app.all('/hello', (req, res) => res.json({status:true, message: "Hello World!"}));
 
 module.exports = app;

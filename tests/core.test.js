@@ -51,7 +51,7 @@ describe("Test the root path.", () => {
     expect(response.body.status).toBe(false)
     expect(response.body.message).toBe("Method PATCH not allowed on /")
   })
-  
+
   test("DELETE / should return 405 method not allowed json response.", async () => {
     const response = await request(app).delete("/")
     expect(response.statusCode).toBe(405)
@@ -59,5 +59,53 @@ describe("Test the root path.", () => {
     expect(typeof response.body).toBe("object")
     expect(response.body.status).toBe(false)
     expect(response.body.message).toBe("Method DELETE not allowed on /")
+  })
+})
+
+describe("test the /hello path", () => {
+  test("should return a valid json response with hello world message.", async () => {
+    const response = await request(app).get("/hello")
+    expect(response.statusCode).toBe(200)
+    expect(response.type).toMatch(/json/)
+    expect(typeof response.body).toBe("object")
+    expect(response.body.status).toBe(true)
+    expect(response.body.message).toBe("Hello World!");
+  })
+
+  test("allow all http methods GET, POST, PUT, PATCH & DELETE", async () => {    
+    let response = await request(app).get("/hello")
+    expect(response.statusCode).toBe(200)
+    expect(response.type).toMatch(/json/)
+    expect(typeof response.body).toBe("object")
+    expect(response.body.status).toBe(true)
+    expect(response.body.message).toBe("Hello World!");
+
+    response = await request(app).post("/hello")
+    expect(response.statusCode).toBe(200)
+    expect(response.type).toMatch(/json/)
+    expect(typeof response.body).toBe("object")
+    expect(response.body.status).toBe(true)
+    expect(response.body.message).toBe("Hello World!");    
+
+    response = await request(app).put("/hello")
+    expect(response.statusCode).toBe(200)
+    expect(response.type).toMatch(/json/)
+    expect(typeof response.body).toBe("object")
+    expect(response.body.status).toBe(true)
+    expect(response.body.message).toBe("Hello World!");    
+
+    response = await request(app).patch("/hello")
+    expect(response.statusCode).toBe(200)
+    expect(response.type).toMatch(/json/)
+    expect(typeof response.body).toBe("object")
+    expect(response.body.status).toBe(true)
+    expect(response.body.message).toBe("Hello World!");    
+
+    response = await request(app).delete("/hello")
+    expect(response.statusCode).toBe(200)
+    expect(response.type).toMatch(/json/)
+    expect(typeof response.body).toBe("object")
+    expect(response.body.status).toBe(true)
+    expect(response.body.message).toBe("Hello World!");
   })
 })
