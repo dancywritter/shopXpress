@@ -4,7 +4,7 @@
   "description": "An ecommerce store restful API written in expressJS",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest tests/"
   },
   "repository": {
     "type": "git",
