@@ -20,6 +20,11 @@
     "express": "^4.16.4"
   },
   "devDependencies": {
-    "nodemon": "^1.18.7"
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "jest": "^23.6.0",
+    "nodemon": "^1.18.7",
+    "superagent": "^4.0.0",
+    "supertest": "^3.3.0"
   }
 }
