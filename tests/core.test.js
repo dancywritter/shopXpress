@@ -6,4 +6,35 @@ describe("Test the root path.", () => {
     const response = await request(app).get("/");
     expect(response.statusCode).toBe(200);
   })
+
+  test("it should response with content type application/json", async () => {
+    const response = await request(app).get("/");
+    expect(response.type).toBe("application/json")
+  })
+
+  test("the response body should be a valid json", async () => {
+    const response = await request(app).get("/");
+    expect(typeof response.body).toBe("object"); //check for json object
+  })
+
+  test("response status should be true and message should valid for root path", async () => {
+    const response = await request(app).get("/");
+    const body = response.body;
+
+    expect(body.status).toBe(true);
+    expect(body.message).toBe("shopXpress an expressJS based RESTful ecommerce engine.")
+  })
+
+  test("any method other than GET should return Method not allowed message and should exit cleanly.", async () => {
+    const response = await request(app).post("/")
+    expect(response.statusCode).toBe(405)
+    expect(response.type).toMatch(/json/)
+    expect(typeof response.body).toBe("object")
+    expect(response.body.status).toBe(false)
+    expect(response.body.message).toBe("Method POST not allowed on /")
+
+    /*const response = await request(app).put("/");
+    const response = await request(app).delete("/");
+    const response = await request(app).patch("/");*/
+  })
 })
