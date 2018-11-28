@@ -17,7 +17,8 @@
   },
   "homepage": "https://github.com/namanattri/shopXpress#readme",
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "mongoose": "^5.3.14"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
