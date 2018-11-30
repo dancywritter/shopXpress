@@ -1,8 +1,39 @@
 const Product = require('../models/product')
 
 module.exports = {
-  index(req, res) {
-    
+  /**
+   * index
+   * 
+   * method to fetch all products (use case: listing)
+   * 
+   * @param {Request} req 
+   * @param {Response} res 
+   */
+  async index(req, res) {
+    const page = typeof req.query.page == 'undefined' ? 1 : parseInt(req.query.page)
+    const size = typeof req.query.size == 'undefined' ? 100 : parseInt(req.query.size)
+
+    //get total page
+    const totalProducts = await Product.countDocuments();
+
+    Product.find().skip((page - 1) * size).limit(size)
+      .then(products => res.json({
+        status: true,
+        message: "Showing available products",
+        products: products,
+        pagination: {
+          page: page,
+          totalPages: Math.ceil(totalProducts /size),
+          pageSize: size,
+          total: totalProducts,
+          showing: products.length,
+        }
+      }))
+      .catch(err => res.status(500).json({
+        status: false,
+        message: err.message,
+        errorCode: err.code
+      }))
   },
 
   /**
@@ -27,8 +58,6 @@ module.exports = {
         message: err.code == 11000 ? "Product with sku: "+req.body.sku+" already exist!" : err.message
       })
     })
-
-    //res.json({message: 'reach'})
   },
 
   /**

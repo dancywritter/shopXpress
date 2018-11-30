@@ -91,7 +91,6 @@ module.exports = (app) => {
       
       expectations.apiBasic(response)
       expectations.statusAndMessage(response, true, "Showing available products")
-      expect(response.body.request.query).toEqual({}) //no query parameters sent
       expect(response.body.products).toEqual([]) //not products currently in the database
       expect(response.body.pagination).toEqual({
         page: 1, //default page
@@ -106,10 +105,6 @@ module.exports = (app) => {
       
       expectations.apiBasic(response)
       expectations.statusAndMessage(response, true, "Showing available products")
-      expect(response.body.request.query).toEqual({
-        page: 3,
-        size: 200
-      })
       expect(response.body.products).toEqual([]) //not products currently in the database
       expect(response.body.pagination).toEqual({
         page: 3, //default page
@@ -125,7 +120,7 @@ module.exports = (app) => {
       for(product of require('./data/products')) {
         var response = await request(app).post('/products').send(product)
         expectations.apiBasic(response)
-        expectations.statusAndMessage(response, true, "Product with sku: sku-1 created successfully!")
+        expectations.statusAndMessage(response, true, "Product with sku: "+product.sku+" created successfully!")
         expect(_.pick(response.body.product, ['sku', 'title', 'description', 'qty'])).toEqual(product)
       }
     })
@@ -135,8 +130,7 @@ module.exports = (app) => {
       
       expectations.apiBasic(response)
       expectations.statusAndMessage(response, true, "Showing available products")
-      expect(response.body.request.query).toEqual({}) //no query parameters sent
-      expect(response.body.products).toEqual(require("./data/products")) //not products currently in the database
+      expect(_.map(response.body.products, product => _.pick(product, ['sku', 'title', 'description', 'qty']))).toEqual(require("./data/products")) //not products currently in the database
       expect(response.body.pagination).toEqual({
         page: 1, //default page
         totalPages: 1,
@@ -150,14 +144,10 @@ module.exports = (app) => {
       
       expectations.apiBasic(response)
       expectations.statusAndMessage(response, true, "Showing available products")
-      expect(response.body.request.query).toEqual({
-        page: 3,
-        size: 200
-      })
-      expect(response.body.products).toEqual([]) //not products at page 3
+      expect(_.map(response.body.products, product => _.pick(product, ['sku', 'title', 'description', 'qty']))).toEqual([]) //not products at page 3
       expect(response.body.pagination).toEqual({
         page: 3, //default page
-        totalPages: 2,
+        totalPages:1,
         pageSize: 200, //default size
         total: 10, //available products count
         showing: 0 //retrieved products count
@@ -168,11 +158,7 @@ module.exports = (app) => {
       
       expectations.apiBasic(response)
       expectations.statusAndMessage(response, true, "Showing available products")
-      expect(response.body.request.query).toEqual({
-        page: 1,
-        size: 5
-      })
-      expect(response.body.products).toEqual(_.slice(require('./data/products'), 0, 5)) //not products at page 3
+      expect(_.map(response.body.products, product => _.pick(product, ['sku', 'title', 'description', 'qty']))).toEqual(_.slice(require('./data/products'), 0, 5)) //not products at page 3
       expect(response.body.pagination).toEqual({
         page: 1, //default page
         totalPages: 2,
