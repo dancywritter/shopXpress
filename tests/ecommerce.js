@@ -175,7 +175,7 @@ module.exports = (app) => {
       const response = await request(app).get('/cart')
 
       expectations.apiBasic(response)
-      expectations.statusAndMessage(true, "Showing products in cart.")
+      expectations.statusAndMessage(response, true, "Showing products in cart.")
       expectations.fieldExistence(response.body.products)
 
       expect(response.body.products).toEqual([])
@@ -186,7 +186,7 @@ module.exports = (app) => {
       var response = await request(app).post('/cart/sku-1').send({qty: 1})
 
       expectations.apiBasic(response)
-      expectations.statusAndMessage(true, "Product added to cart.")
+      expectations.statusAndMessage(response, true, "Product added to cart.")
       expectations.fieldExistence(response.body.products)
 
       expect(response.body.products).toEqual([
@@ -201,7 +201,7 @@ module.exports = (app) => {
       //try adding a non existent product to cart
       var response = await request(app).post('/cart/sku-21').send({qty: 2})
       expectations.apiBasic(response)
-      expectations.statusAndMessage(false, "Product with sku-21 not found in our database.")
+      expectations.statusAndMessage(response, false, "Product with sku-21 not found in our database.")
       expectations.fieldExistence(response.body.products)
 
       expect(response.body.products).toEqual([
@@ -217,7 +217,7 @@ module.exports = (app) => {
       var response = await request(app).post('/cart/sku-3').send({qty: 70})
 
       expectations.apiBasic(response)
-      expectations.statusAndMessage(false, "We currently have only 25 sku-3 in stock.")
+      expectations.statusAndMessage(response, false, "We currently have only 25 sku-3 in stock.")
       expectations.fieldExistence(response.body.products)
 
       expect(response.body.products).toEqual([
@@ -233,7 +233,7 @@ module.exports = (app) => {
       var response = await request(app).post('/cart/sku-1').send({qty: 5})
 
       expectations.apiBasic(response)
-      expectations.statusAndMessage(true, "Product added to cart.")
+      expectations.statusAndMessage(response, true, "Product added to cart.")
       expectations.fieldExistence(response.body.products)
 
       expect(response.body.products).toEqual([
@@ -249,7 +249,7 @@ module.exports = (app) => {
       var response = await request(app).post('/cart/sku-1').send({qty: 10})
 
       expectations.apiBasic(response)
-      expectations.statusAndMessage(false, "We currently have only 15 sku-3 in stock.")
+      expectations.statusAndMessage(response, false, "We currently have only 15 sku-3 in stock.")
       expectations.fieldExistence(response.body.products)
 
       expect(response.body.products).toEqual([
@@ -267,7 +267,7 @@ module.exports = (app) => {
       var response = await request(app).post('/cart/sku-2').send({qty: 10})
 
       expectations.apiBasic(response)
-      expectations.statusAndMessage(true, "Product added to cart.")
+      expectations.statusAndMessage(response, true, "Product added to cart.")
       expectations.fieldExistence(response.body.products)
 
       expect(response.body.products).toEqual([
@@ -289,7 +289,7 @@ module.exports = (app) => {
       var response = await request(app).put('/cart/sku-2').send({qty: 2})
 
       expectations.apiBasic(response)
-      expectations.statusAndMessage(true, "Product added to cart.")
+      expectations.statusAndMessage(response, true, "Product added to cart.")
       expectations.fieldExistence(response.body.products)
 
       expect(response.body.products).toEqual([
@@ -311,7 +311,7 @@ module.exports = (app) => {
       var response = await request(app).put('/cart/sku-2').send({qty: 8})
 
       expectations.apiBasic(response)
-      expectations.statusAndMessage(true, "Product added to cart.")
+      expectations.statusAndMessage(response, true, "Product added to cart.")
       expectations.fieldExistence(response.body.products)
 
       expect(response.body.products).toEqual([
@@ -333,7 +333,7 @@ module.exports = (app) => {
       var response = await request(app).put('/cart/sku-2').send({qty: 15})
 
       expectations.apiBasic(response)
-      expectations.statusAndMessage(true, "Cannot update quantity for product sku-2, as only 12 available in stock.")
+      expectations.statusAndMessage(response, true, "Cannot update quantity for product sku-2, as only 12 available in stock.")
       expectations.fieldExistence(response.body.products)
 
       expect(response.body.products).toEqual([
@@ -355,7 +355,7 @@ module.exports = (app) => {
       var response = await request(app).put('/cart/sku-32').send({qty: 15})
 
       expectations.apiBasic(response)
-      expectations.statusAndMessage(false, "Cannot find product sku-32.")
+      expectations.statusAndMessage(response, false, "Cannot find product sku-32.")
       expectations.fieldExistence(response.body.products)
 
       expect(response.body.products).toEqual([
@@ -378,7 +378,7 @@ module.exports = (app) => {
       var response = await request(app).get('/cart').send({qty: 15})
 
       expectations.apiBasic(response)
-      expectations.statusAndMessage(true, "Showing products in cart.")
+      expectations.statusAndMessage(response, true, "Showing products in cart.")
       expectations.fieldExistence(response.body.products)
 
       expect(response.body.products).toEqual([
@@ -401,7 +401,7 @@ module.exports = (app) => {
       var response = await request(app).delete('/cart/sku-1')
 
       expectations.apiBasic(response)
-      expectations.statusAndMessage(true, "Product sku-1 removed from cart.")
+      expectations.statusAndMessage(response, true, "Product sku-1 removed from cart.")
       expectations.fieldExistence(response.body.products)
 
       expect(response.body.products).toEqual([
@@ -417,7 +417,7 @@ module.exports = (app) => {
       var response = await request(app).delete('/cart/sku-15')
 
       expectations.apiBasic(response)
-      expectations.statusAndMessage(true, "Cannot find product sku-15.")
+      expectations.statusAndMessage(response, true, "Cannot find product sku-15.")
       expectations.fieldExistence(response.body.products)
 
       expect(response.body.products).toEqual([
@@ -434,7 +434,7 @@ module.exports = (app) => {
       var response = await request(app).delete('/cart')
 
       expectations.apiBasic(response)
-      expectations.statusAndMessage(true, "Cart has been emptied.")
+      expectations.statusAndMessage(response, true, "Cart has been emptied.")
       expectations.fieldExistence(response.body.products)
 
       expect(response.body.products).toEqual([])
