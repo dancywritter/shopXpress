@@ -75,9 +75,9 @@ module.exports = (app) => {
     test("non existing product", async () => {
       var response = await request(app).get("/products/sku-5")
       nonExistentExpectations(response)
-      response = await require(app).put("/products/sku-5")
+      response = await request(app).put("/products/sku-5")
       nonExistentExpectations(response)
-      response = await require(app).delete("/products/sku-5")
+      response = await request(app).delete("/products/sku-5")
       nonExistentExpectations(response)
 
       function nonExistentExpectations(response) {
