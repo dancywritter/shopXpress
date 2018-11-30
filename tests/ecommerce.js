@@ -14,7 +14,7 @@ module.exports = (app) => {
         description: 'description-1',
         qty: 10
       }
-      const response = await request(app).post().send(product)
+      const response = await request(app).post("/products").send(product)
       expectations.apiBasic(response)
       expectations.statusAndMessage(response, true, "Product with sku: sku-1 created successfully!")
       expect(_.pick(response.body.product, ['sku', 'title', 'description', 'qty'])).toEqual(product)
@@ -74,14 +74,14 @@ module.exports = (app) => {
     })
 
     test("non existing product", async () => {
-      var response = await require(app).get("/products/sku-5")
-      expectations(response)
+      var response = await request(app).get("/products/sku-5")
+      nonExistentExpectations(response)
       response = await require(app).put("/products/sku-5")
-      expectations(response)
+      nonExistentExpectations(response)
       response = await require(app).delete("/products/sku-5")
-      expectations(response)
+      nonExistentExpectations(response)
 
-      function expectations(response) {
+      function nonExistentExpectations(response) {
         expectations.apiBasic(response)
         expectations.statusAndMessage(response, false, "Product with sku: sku-5 doesn't exist!")
       }
@@ -124,7 +124,7 @@ module.exports = (app) => {
   
     test("create multiple products in loop", async () => { 
       for(product of require('./data/products')) {
-        var response = await request(app).post().send(product)
+        var response = await request(app).post('/products').send(product)
         expectations.apiBasic(response)
         expectations.statusAndMessage(response, true, "Product with sku: sku-1 created successfully!")
         expect(_.pick(response.body.product, ['sku', 'title', 'description', 'qty'])).toEqual(product)
