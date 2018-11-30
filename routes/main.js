@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const ProductsRouter = require('./product');
 
 router.all('/', (req, res) => {
   if(req.method == 'GET') {
@@ -8,6 +9,8 @@ router.all('/', (req, res) => {
   }
 });
 router.all('/hello', (req, res) => res.json({status:true, message: "Hello World!"}));
+
+router.use('/products', ProductsRouter)
 
 //handle 404
 router.use((req, res, next) => {
