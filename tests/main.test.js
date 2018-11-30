@@ -2,8 +2,12 @@ const request = require('supertest');
 const app = require('../app.test');
 const mongoose = require('mongoose')
 
+beforeAll(() => {
+  mongoose.connection.dropDatabase('shopXpress_test')
+})
+
 afterAll(() => {
-  mongoose.connection.close()
+  app.cleanExit()
 })
 
 //core

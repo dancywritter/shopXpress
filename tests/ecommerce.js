@@ -28,9 +28,8 @@ module.exports = (app) => {
         qty: 10
       }
       const response = await request(app).post("/products").send(product)
-      expectations.apiBasic(response)
+      expectations.apiBasic500(response)
       expectations.statusAndMessage(response, false, "Product with sku: sku-1 already exist!")
-      expect(_.pick(response.body.product, ['sku'])).toEqual(_.pick(product, ['sku']))
     })
 
     test("retrieve created product", async () => { 
