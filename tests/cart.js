@@ -6,7 +6,7 @@ const _ = require('lodash')
 const expectations = require('./commons/expectations')
 
 module.exports = (app) => {
-  test("cart should be empty", async () => {
+  test("it should show products array empty when there is no product in add to the cart", async () => {
     const response = await request(app).get('/cart')
 
     expectations.apiBasic(response)
@@ -16,7 +16,7 @@ module.exports = (app) => {
     expect(response.body.products).toEqual([])
   })
 
-  test("add existing product to cart", async () => { 
+  test("it should succesfully add an existing product to the cart", async () => { 
     var response = await request(app).post('/cart/sku-1').send({qty: 1})
 
     expectations.apiBasic(response)
@@ -33,7 +33,7 @@ module.exports = (app) => {
     ])
   })
 
-  test("try adding a non existent product to cart", async () => {
+  test("it should not allow non-existing sku to be added in cart", async () => {
     var response = await request(app).post('/cart/sku-21').send({qty: 2})
     expectations.apiBasic(response)
     expectations.statusAndMessage(response, false, "Product with sku-21 not found in our database.")
@@ -49,7 +49,7 @@ module.exports = (app) => {
     ])
   })
 
-  test("try adding more than available quantity", async () => {
+  test("it should not allow an sku to be added to the cart if the supplied quantity is more than available for the sku", async () => {
     var response = await request(app).post('/cart/sku-3').send({qty: 70})
 
     expectations.apiBasic(response)
@@ -66,7 +66,7 @@ module.exports = (app) => {
     ])
   })
 
-  test("try adding same sku again", async () => {
+  test("it should add up the quantity supplied for the same sku rather than making a duplicate entry in cart", async () => {
     var response = await request(app).post('/cart/sku-1').send({qty: 5})
 
     expectations.apiBasic(response)
@@ -83,7 +83,7 @@ module.exports = (app) => {
     ])
   })
 
-  test("try adding same sku again but resultant qty exceeding stock", async () => {
+  test("it should not add up the quantity supplied for the same sku if the resultant quantity exceeds the available", async () => {
     var response = await request(app).post('/cart/sku-1').send({qty: 10})
 
     expectations.apiBasic(response)
@@ -100,7 +100,7 @@ module.exports = (app) => {
     ])
   })
   
-  test("add another product to cart", async () => {
+  test("it should show products array with two entries when another product is added to the cart", async () => {
     var response = await request(app).post('/cart/sku-2').send({qty: 10})
 
     expectations.apiBasic(response)
@@ -123,8 +123,7 @@ module.exports = (app) => {
     ])
   })
 
-  test("reduce cart product quantity", async () => {
-    //reduce qty
+  test("it should update the selected quantity for the product in card and show the reduced quantity for the target product in the products array", async () => {
     var response = await request(app).put('/cart/sku-2').send({qty: 2})
 
     expectations.apiBasic(response)
@@ -147,7 +146,7 @@ module.exports = (app) => {
     ])
   })
 
-  test("increase cart product qty", async () => {
+  test("it should update the selected quantity for the product in card and show the increased quantity for the target product in the products array", async () => {
     var response = await request(app).put('/cart/sku-2').send({qty: 8})
 
     expectations.apiBasic(response)
@@ -170,7 +169,7 @@ module.exports = (app) => {
     ])
   })
 
-  test("increase cart product qty beyond in-stock", async () => {
+  test("it should not allow updating quantity above the available", async () => {
     var response = await request(app).put('/cart/sku-2').send({qty: 15})
 
     expectations.apiBasic(response)
@@ -193,7 +192,7 @@ module.exports = (app) => {
     ])
   })
 
-  test("try changing qty of a non existing product", async () => {
+  test("it should not allow updating quantity for a non-existing product", async () => {
     var response = await request(app).put('/cart/sku-32').send({qty: 15})
 
     expectations.apiBasic(response)
@@ -216,7 +215,7 @@ module.exports = (app) => {
     ])
   })
 
-  test("show all products in cart", async () => { 
+  test("it should show all products in cart", async () => { 
     var response = await request(app).get('/cart').send({qty: 15})
 
     expectations.apiBasic(response)
@@ -239,7 +238,7 @@ module.exports = (app) => {
     ])
   })
 
-  test("remove single product from cart", async () => { 
+  test("it should remove only target sku from the cart", async () => { 
     var response = await request(app).delete('/cart/sku-1')
 
     expectations.apiBasic(response)
@@ -256,7 +255,7 @@ module.exports = (app) => {
     ])
   })
 
-  test("remove a non existing product from cart", async () => {
+  test("it should return a cannot find product message when a non-existing sku is removed", async () => {
     var response = await request(app).delete('/cart/sku-15')
 
     expectations.apiBasic(response)
@@ -273,7 +272,7 @@ module.exports = (app) => {
     ])
   })
 
-  test("empty cart", async () => { 
+  test("it should empty the cart", async () => { 
     var response = await request(app).delete('/cart')
 
     expectations.apiBasic(response)
