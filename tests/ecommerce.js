@@ -181,15 +181,14 @@ module.exports = (app) => {
       expect(response.body.products).toEqual([])
     })
 
-    test("add product to cart", async () => { 
-      //try adding an existing product to cart
+    test("add existing product to cart", async () => { 
       var response = await request(app).post('/cart/sku-1').send({qty: 1})
 
       expectations.apiBasic(response)
       expectations.statusAndMessage(response, true, "Product added to cart.")
       expectations.fieldExistence(response.body.products)
 
-      expect(response.body.products).toEqual([
+      expect(_.map(response.body.products, product => _.pick(product, ["sku", "title", "description", "qty"]))).toEqual([
         {
           "sku": "sku-1",
           "title": "title-1",
@@ -197,14 +196,15 @@ module.exports = (app) => {
           "qty": 1
         }
       ])
+    })
 
-      //try adding a non existent product to cart
+    test("try adding a non existent product to cart", async () => {
       var response = await request(app).post('/cart/sku-21').send({qty: 2})
       expectations.apiBasic(response)
       expectations.statusAndMessage(response, false, "Product with sku-21 not found in our database.")
       expectations.fieldExistence(response.body.products)
 
-      expect(response.body.products).toEqual([
+      expect(_.map(response.body.products, product => _.pick(product, ["sku", "title", "description", "qty"]))).toEqual([
         {
           "sku": "sku-1",
           "title": "title-1",
@@ -212,15 +212,16 @@ module.exports = (app) => {
           "qty": 1
         }
       ])
+    })
 
-      //try adding more than available quantity
+    test("try adding more than available quantity", async () => {
       var response = await request(app).post('/cart/sku-3').send({qty: 70})
 
       expectations.apiBasic(response)
       expectations.statusAndMessage(response, false, "We currently have only 25 sku-3 in stock.")
       expectations.fieldExistence(response.body.products)
 
-      expect(response.body.products).toEqual([
+      expect(_.map(response.body.products, product => _.pick(product, ["sku", "title", "description", "qty"]))).toEqual([
         {
           "sku": "sku-1",
           "title": "title-1",
@@ -228,15 +229,16 @@ module.exports = (app) => {
           "qty": 1
         }
       ])
+    })
 
-      //try adding same sku again
+    test("try adding same sku again", async () => {
       var response = await request(app).post('/cart/sku-1').send({qty: 5})
 
       expectations.apiBasic(response)
       expectations.statusAndMessage(response, true, "Product added to cart.")
       expectations.fieldExistence(response.body.products)
 
-      expect(response.body.products).toEqual([
+      expect(_.map(response.body.products, product => _.pick(product, ["sku", "title", "description", "qty"]))).toEqual([
         {
           "sku": "sku-1",
           "title": "title-1",
@@ -244,15 +246,16 @@ module.exports = (app) => {
           "qty": 6
         }
       ])
+    })
 
-      //try adding same sku again but resultant qty exceeding stock
+    test("try adding same sku again but resultant qty exceeding stock", async () => {
       var response = await request(app).post('/cart/sku-1').send({qty: 10})
 
       expectations.apiBasic(response)
-      expectations.statusAndMessage(response, false, "We currently have only 15 sku-3 in stock.")
+      expectations.statusAndMessage(response, false, "We currently have only 15 sku-1 in stock.")
       expectations.fieldExistence(response.body.products)
 
-      expect(response.body.products).toEqual([
+      expect(_.map(response.body.products, product => _.pick(product, ["sku", "title", "description", "qty"]))).toEqual([
         {
           "sku": "sku-1",
           "title": "title-1",
@@ -270,7 +273,7 @@ module.exports = (app) => {
       expectations.statusAndMessage(response, true, "Product added to cart.")
       expectations.fieldExistence(response.body.products)
 
-      expect(response.body.products).toEqual([
+      expect(_.map(response.body.products, product => _.pick(product, ["sku", "title", "description", "qty"]))).toEqual([
         {
           "sku": "sku-1",
           "title": "title-1",
@@ -292,7 +295,7 @@ module.exports = (app) => {
       expectations.statusAndMessage(response, true, "Product added to cart.")
       expectations.fieldExistence(response.body.products)
 
-      expect(response.body.products).toEqual([
+      expect(_.map(response.body.products, product => _.pick(product, ["sku", "title", "description", "qty"]))).toEqual([
         {
           "sku": "sku-1",
           "title": "title-1",
@@ -314,7 +317,7 @@ module.exports = (app) => {
       expectations.statusAndMessage(response, true, "Product added to cart.")
       expectations.fieldExistence(response.body.products)
 
-      expect(response.body.products).toEqual([
+      expect(_.map(response.body.products, product => _.pick(product, ["sku", "title", "description", "qty"]))).toEqual([
         {
           "sku": "sku-1",
           "title": "title-1",
@@ -336,7 +339,7 @@ module.exports = (app) => {
       expectations.statusAndMessage(response, true, "Cannot update quantity for product sku-2, as only 12 available in stock.")
       expectations.fieldExistence(response.body.products)
 
-      expect(response.body.products).toEqual([
+      expect(_.map(response.body.products, product => _.pick(product, ["sku", "title", "description", "qty"]))).toEqual([
         {
           "sku": "sku-1",
           "title": "title-1",
@@ -358,7 +361,7 @@ module.exports = (app) => {
       expectations.statusAndMessage(response, false, "Cannot find product sku-32.")
       expectations.fieldExistence(response.body.products)
 
-      expect(response.body.products).toEqual([
+      expect(_.map(response.body.products, product => _.pick(product, ["sku", "title", "description", "qty"]))).toEqual([
         {
           "sku": "sku-1",
           "title": "title-1",
@@ -381,7 +384,7 @@ module.exports = (app) => {
       expectations.statusAndMessage(response, true, "Showing products in cart.")
       expectations.fieldExistence(response.body.products)
 
-      expect(response.body.products).toEqual([
+      expect(_.map(response.body.products, product => _.pick(product, ["sku", "title", "description", "qty"]))).toEqual([
         {
           "sku": "sku-1",
           "title": "title-1",
@@ -404,7 +407,7 @@ module.exports = (app) => {
       expectations.statusAndMessage(response, true, "Product sku-1 removed from cart.")
       expectations.fieldExistence(response.body.products)
 
-      expect(response.body.products).toEqual([
+      expect(_.map(response.body.products, product => _.pick(product, ["sku", "title", "description", "qty"]))).toEqual([
         {
           "sku": "sku-2",
           "title": "title-2",
@@ -420,7 +423,7 @@ module.exports = (app) => {
       expectations.statusAndMessage(response, true, "Cannot find product sku-15.")
       expectations.fieldExistence(response.body.products)
 
-      expect(response.body.products).toEqual([
+      expect(_.map(response.body.products, product => _.pick(product, ["sku", "title", "description", "qty"]))).toEqual([
         {
           "sku": "sku-2",
           "title": "title-2",

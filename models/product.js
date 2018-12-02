@@ -15,4 +15,10 @@ const ProductSchema = new Schema({
   }
 }, {timestamps: true})
 
-module.exports = mongoose.model('Product', ProductSchema)
+ProductSchema.statics.findBySku = sku => {
+  return Product.findOne({sku: sku})
+}
+
+const Product = mongoose.model('Product', ProductSchema)
+
+module.exports = Product

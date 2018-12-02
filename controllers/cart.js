@@ -1,24 +1,9 @@
 const Cart = require('../models/cart')
+const Product = require('../models/product')
 
 module.exports = {
   async index(req, res) {
-    await Cart.aggregate([
-      {$lookup: {
-        from: 'product',
-        localField: 'sku',
-        foreignField: 'sku',
-        as: 'product'
-      }},
-      {$addFields: {
-        product: {$arrayElemAt: ['$product', 0]}
-      }},
-      {$addFields: {
-        'product.qty': '$qty'
-      }},
-      {$replaceRoot: {
-        newRoot: "$product"
-      }}
-    ]).exec().then(products => {
+    await Cart.getCartProducts().then(products => {
       res.json({
         status:true,
         message: "Showing products in cart.",
@@ -33,16 +18,60 @@ module.exports = {
     })
   },
 
-  addProduct() {
+  /**
+   * addProduct
+   * 
+   * @param {Request} req 
+   * @param {Response} res 
+   */
+  async addProduct(req, res) {
+    try {
+      const product = await Product.findBySku(req.params.sku).catch(err => { throw err })
 
+      if(product == null) return res.json({
+        status:false,
+        message: "Product with "+req.params.sku+" not found in our database.",
+        products: await Cart.getCartProducts().catch(err => { throw err })
+      })
+
+      //see if already in cart
+      var cartProduct = await Cart.getCartProductBySku(req.params.sku).catch(err => { throw err })
+
+      if((cartProduct ? cartProduct.qty + req.body.qty : req.body.qty) > product.qty) return res.json({
+        status:false,
+        message: "We currently have only "+product.qty+" "+product.sku+" in stock.",
+        products: await Cart.getCartProducts().catch(err => { throw err })
+      })
+
+      if(cartProduct) {
+        await Cart.updateOne({sku: cartProduct.sku}, {$set: {qty: cartProduct.qty + req.body.qty}}).catch(err => { throw err })
+      } else {
+        cartProduct = new Cart({sku: req.params.sku, qty: req.body.qty});
+        await cartProduct.save().catch(err => { throw err})
+      }
+
+      res.json({
+        status:true,
+        message: "Product added to cart.",
+        products: await Cart.getCartProducts().catch(err => { throw err })
+      })
+    } catch(err) {
+      res.json({
+        status:false,
+        message: err.message
+      })
+    }
   },
+
   changeProductQty() {
 
   },
+
   removeSingleProduct() {
 
   },
+
   empty() {
 
-  }
+  },
 }
