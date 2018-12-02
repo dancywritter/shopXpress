@@ -13,4 +13,5 @@ afterAll(() => {
 //core
 describe("core", () => require('./core')(app));
 //ecommerce
-describe("ecommerce", () => require('./ecommerce')(app));
+describe("product", () => require('./product')(app));
+describe("cart", () => require('./cart')(app));
