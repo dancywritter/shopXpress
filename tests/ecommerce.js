@@ -264,9 +264,8 @@ module.exports = (app) => {
         }
       ])
     })
-
-    test("update cart product quantity", async () => {
-      //add another product to cart
+    
+    test("add another product to cart", async () => {
       var response = await request(app).post('/cart/sku-2').send({qty: 10})
 
       expectations.apiBasic(response)
@@ -287,7 +286,9 @@ module.exports = (app) => {
           "qty": 10
         }
       ])
+    })
 
+    test("reduce cart product quantity", async () => {
       //reduce qty
       var response = await request(app).put('/cart/sku-2').send({qty: 2})
 
@@ -309,8 +310,9 @@ module.exports = (app) => {
           "qty": 2
         }
       ])
+    })
 
-      //increase qty
+    test("increase cart product qty", async () => {
       var response = await request(app).put('/cart/sku-2').send({qty: 8})
 
       expectations.apiBasic(response)
@@ -331,8 +333,9 @@ module.exports = (app) => {
           "qty": 8
         }
       ])
+    })
 
-      //increase qty beyond in-stock
+    test("increase cart product qty beyond in-stock", async () => {
       var response = await request(app).put('/cart/sku-2').send({qty: 15})
 
       expectations.apiBasic(response)
@@ -353,8 +356,9 @@ module.exports = (app) => {
           "qty": 8
         }
       ])
+    })
 
-      //try changing qty of a non existing product      
+    test("try changing qty of a non existing product", async () => {
       var response = await request(app).put('/cart/sku-32').send({qty: 15})
 
       expectations.apiBasic(response)
