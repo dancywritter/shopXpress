@@ -293,7 +293,7 @@ module.exports = (app) => {
       var response = await request(app).put('/cart/sku-2').send({qty: 2})
 
       expectations.apiBasic(response)
-      expectations.statusAndMessage(response, true, "Product added to cart.")
+      expectations.statusAndMessage(response, true, "Qty for sku-2 in cart updated to 2.")
       expectations.fieldExistence(response.body.products)
 
       expect(_.map(response.body.products, product => _.pick(product, ["sku", "title", "description", "qty"]))).toEqual([
@@ -316,7 +316,7 @@ module.exports = (app) => {
       var response = await request(app).put('/cart/sku-2').send({qty: 8})
 
       expectations.apiBasic(response)
-      expectations.statusAndMessage(response, true, "Product added to cart.")
+      expectations.statusAndMessage(response, true, "Qty for sku-2 in cart updated to 8.")
       expectations.fieldExistence(response.body.products)
 
       expect(_.map(response.body.products, product => _.pick(product, ["sku", "title", "description", "qty"]))).toEqual([
@@ -339,7 +339,7 @@ module.exports = (app) => {
       var response = await request(app).put('/cart/sku-2').send({qty: 15})
 
       expectations.apiBasic(response)
-      expectations.statusAndMessage(response, true, "Cannot update quantity for product sku-2, as only 12 available in stock.")
+      expectations.statusAndMessage(response, false, "We currently have only 12 sku-2 in stock.")
       expectations.fieldExistence(response.body.products)
 
       expect(_.map(response.body.products, product => _.pick(product, ["sku", "title", "description", "qty"]))).toEqual([

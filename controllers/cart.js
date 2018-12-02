@@ -63,8 +63,37 @@ module.exports = {
     }
   },
 
-  changeProductQty() {
+  async changeProductQty(req, res) {
+    try {
+      const product = await Product.findBySku(req.params.sku).catch(err => { throw err })
+      const cartProduct = await Cart.getCartProductBySku(req.params.sku).catch(err => { throw err })
 
+      if(product == null || cartProduct == null) return res.json({
+        status:false,
+        message: "Cannot find product "+req.params.sku+".",
+        products: await Cart.getCartProducts().catch(err => { throw err })
+      })
+
+      if(req.body.qty > product.qty) return res.json({
+        status:false,
+        message: "We currently have only "+product.qty+" "+product.sku+" in stock.",
+        products: await Cart.getCartProducts().catch(err => { throw err })
+      })
+
+      //update cart qty
+      await Cart.updateOne({sku: req.params.sku}, {$set: {qty: req.body.qty}}).catch(err => { throw err })
+
+      res.json({
+        status: true,
+        message: "Qty for "+req.params.sku+" in cart updated to "+req.body.qty+".",
+        products: await Cart.getCartProducts().catch(err => { throw err })
+      })
+    } catch(err) {
+      res.json({
+        status:false,
+        message: err.message
+      })
+    }
   },
 
   removeSingleProduct() {
