@@ -19,7 +19,7 @@ const routes = require('./routes/main');
 app.use("/", routes);
 
 app.cleanExit = () => {
-  mongoose.connection.close(() => process.exit(0))
+  mongoose.connection.close()
 }
 
 module.exports = app;

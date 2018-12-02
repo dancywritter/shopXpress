@@ -419,12 +419,13 @@ module.exports = (app) => {
           "qty": 8
         }
       ])
+    })
 
-      //delete a non existing product
+    test("remove a non existing product from cart", async () => {
       var response = await request(app).delete('/cart/sku-15')
 
       expectations.apiBasic(response)
-      expectations.statusAndMessage(response, true, "Cannot find product sku-15.")
+      expectations.statusAndMessage(response, false, "Cannot find product sku-15.")
       expectations.fieldExistence(response.body.products)
 
       expect(_.map(response.body.products, product => _.pick(product, ["sku", "title", "description", "qty"]))).toEqual([
@@ -444,7 +445,7 @@ module.exports = (app) => {
       expectations.statusAndMessage(response, true, "Cart has been emptied.")
       expectations.fieldExistence(response.body.products)
 
-      expect(response.body.products).toEqual([])
+      expect(_.map(response.body.products, product => _.pick(product, ["sku", "title", "description", "qty"]))).toEqual([])
     })
   })
 }

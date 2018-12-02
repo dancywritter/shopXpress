@@ -96,11 +96,48 @@ module.exports = {
     }
   },
 
-  removeSingleProduct() {
+  async removeSingleProduct(req, res) {
+    try {
+      const product = await Product.findBySku(req.params.sku).catch(err => { throw err })
+      const cartProduct = await Cart.getCartProductBySku(req.params.sku).catch(err => { throw err })
 
+      if(product == null || cartProduct == null) return res.json({
+        status:false,
+        message: "Cannot find product "+req.params.sku+".",
+        products: await Cart.getCartProducts().catch(err => { throw err })
+      })
+
+      //update cart qty
+      await Cart.deleteOne({sku: req.params.sku}).catch(err => { throw err })
+
+      res.json({
+        status: true,
+        message: "Product "+req.params.sku+" removed from cart.",
+        products: await Cart.getCartProducts().catch(err => { throw err })
+      })
+    } catch(err) {
+      res.json({
+        status:false,
+        message: err.message
+      })
+    }
   },
 
-  empty() {
+  async empty(req, res) {
+    try {
+      //update cart qty
+      await Cart.deleteMany({}).catch(err => { throw err })
 
+      res.json({
+        status: true,
+        message: "Cart has been emptied.",
+        products: await Cart.getCartProducts().catch(err => { throw err })
+      })
+    } catch(err) {
+      res.json({
+        status:false,
+        message: err.message
+      })
+    }
   },
 }
